@@ -1,5 +1,21 @@
 <?php
-    if(isset($_POST["d"]))
+function shuffle_assoc($array) {
+    $keys = array_keys($array);
+
+    shuffle($keys);
+
+    $new = "";
+
+    foreach($keys as $key) {
+        $new[$key] = $array[$key];
+    }
+
+    $array = $new;
+
+    return true;
+}
+
+if(isset($_POST["d"]))
     {
         $archivos = scandir("images/frutas");
 
@@ -38,7 +54,8 @@
         $salida = "{\"imagenes\": [";
 
         for($i = 0; $i < count($archivos); $i++) {
-            $salida .= "{ \"id\": " . ($i+1) . ", \"url\": " . "\"images/frutas/" . $archivos[$i] . "\"},";
+            $salida .= "{ \"id\": " . ($i+1) . ", \"url\": " . "\"images/frutas/" . $archivos[$i] . "\"}," .
+                        "{ \"id\": " . ($i+1) . ", \"url\": " . "\"images/frutas/" . $archivos[$i] . "\"},";
         }
 
         $salida .= "]}";
@@ -47,9 +64,7 @@
 
         $salida .= "]}";
 
-        echo $salida;
-
-        //var_dump($archivos);
+        echo($salida);
     }
     else {
         die("No tiene permiso para visualizar esta página.");
