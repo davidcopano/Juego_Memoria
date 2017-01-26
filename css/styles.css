@@ -12,19 +12,8 @@ body {
 	font-family: 'Segoe UI', "Open Sans", sans-serif;
 }
 
-h1 {
+h1, h2 {
 	text-align: center;
-	background-color: white;
-	width: 30%;
-	margin-left: 400px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	margin-bottom: 0;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	border-top: 1px solid black;
 }
 
 #divCartas {
