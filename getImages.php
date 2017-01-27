@@ -32,7 +32,7 @@ if(isset($_POST["d"]))
         {
             // Tamaño de 12 cartas (6 cartas con su pareja)
             case 1: {
-                for($i = 0; $i < 8; $i++) {
+                for($i = 0; $i < 14; $i++) {
                     array_pop($archivos);
                 }
             }
@@ -41,12 +41,20 @@ if(isset($_POST["d"]))
 
             // Tamaño de 16 cartas (8 cartas con su pareja)
             case 2: {
-                for($i = 0; $i < 4; $i++) {
+                for($i = 0; $i < 12; $i++) {
                     array_pop($archivos);
                 }
             }
 
             break;
+
+            case 3: {
+                for($i = 0; $i < 10; $i++) {
+                    array_pop($archivos);
+                }
+            }
+
+                break;
         }
 
         // Conversión a JSON

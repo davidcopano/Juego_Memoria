@@ -14,6 +14,12 @@ body {
 
 h1, h2 {
 	text-align: center;
+	text-shadow: 3px 3px black;
+	color: white;
+}
+
+h2 {
+    margin-top: 0;
 }
 
 #divCartas {
@@ -22,16 +28,20 @@ h1, h2 {
 	padding-left: 5%;
 	padding-right: 5%;
 	width: 80%;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	border-bottom: 1px solid black;
+	border-left: 3px solid #007E33;
+	border-right: 3px solid #007E33;
+	/*border-bottom: 1px solid black;*/
 	border-radius: 5px;
 }
 
 #divCartas .carta {
 	padding-top: 5px;
-	/*margin-top: 5px;*/
+	margin-top: 15px;
+	margin-bottom: 15px;
+    /*background: linear-gradient(#ef7573, #efe684);*/
+    border-radius: 5px;
 	padding-left: 50px;
+    height: 110px;
 }
 
 .carta:hover {
@@ -49,6 +59,9 @@ div.back p {
 
 div.bottom-bar {
 	background-color: #2F2F2F;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
 
 div.bottom-bar strong#info {
@@ -99,10 +112,7 @@ div.modal-body p, h2.modal-title {
   vertical-align: middle;
 }
 
-#reload {
-	float: right;
-}
-
-#cerrar {
-	float: left;
+#h1Partida {
+	text-shadow: 3px 3px 3px #cecece;
+	color: black;
 }
