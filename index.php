@@ -60,6 +60,8 @@
         </div>
     </div>
     <script>
+        var cardClicked = false, url1 = "", url2 = "";
+
         $(document).ready(function () {
             $("button.dificultades").click(function () {
                 $.post("getImages.php", { d: $(this).attr("value") }, function (data) {
@@ -77,23 +79,52 @@
                     var salida = "";
 
                     for(var i = 0; i < json.imagenes.length; i++) {
-                        salida += "<div class='carta col-sm-3' id='carta" + i + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></div>";
+                        salida += "<div class='carta col-sm-3' id='carta" + (i+1) + "' data-id='" + json.imagenes[i].id + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></div>";
                     }
 
                     $("#divDificultades").slideUp();
 
                     $fila.html(salida).slideDown("slow");
-                    $("div.carta").flip();
+
+                    // flip(): inicializa la librería
+                    // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
+                    $("div.carta").flip().on("click",function (e) {
+
+                        cardClicked = true;
+
+                        url1 = $(this).find("div.back img").attr("src");
+
+                        //$(this).flip(true, prueba($(this).attr("data-id")));
+                        $(this).flip(true);
+
+                        alert(url1);
+
+                        if(cardClicked) {
+                            $(this).off(e);
+                            $("div.carta").on("click", function (e) {
+                                $(this).off(e);
+                                url2 = $(this).find("div.back img").attr("src");
+                                alert("URL 1: " + url1 + "\n" + "URL 2: " + url2);
+                            })
+                        }
+
+//                        $("div.carta").on("click", function () {
+//
+//                            url2 = $(this).find("div.back img").attr("src");
+//
+//                            alert("URL 1: " + url1 + "\n" + "URL 2: " + url2);
+//                        });
+                    });
                 });
 
-                checkCards($("div.carta").length);
+                checkCards();
 
                 $("div.bottom-bar").slideDown();
             });
 
             $(".modal-body button.dificultades").click(function () {
                 $("#modalReiniciar").modal("toggle");
-            })
+            });
         });
 
         function desordena(array) {
@@ -106,12 +137,12 @@
             }
         }
 
-        function checkCards(cardsLength) {
-//            if(cardsLength > 12) {
-//                $("#divCartas").css("margin-bottom", "100px");
-//            }
-
+        function checkCards() {
             $("#divCartas").css("margin-bottom", "100px");
+        }
+
+        function prueba(id) {
+            alert(id);
         }
     </script>
 </body>
