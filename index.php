@@ -31,9 +31,9 @@
     </div>
     <div class="bottom-bar" style="display: none;">
         <strong id="info">Información de la partida</strong>
-        <span id="intentos">Número de intentos: 0</span>
-        <span id="aciertos">Número de aciertos: 0</span>
-        <span id="cartasRestantes">Cartas restantes: 0</span>
+        <span>Número de intentos: <span id="intentos" style="margin-left: 0">0</span></span>
+        <span>Número de aciertos: <span id="aciertos" style="margin-left: 0">0</span></span>
+        <span>Cartas restantes: <span id="cartasRestantes" style="margin-left: 0">0</span></span>
         <button class="btn btn-danger" data-target="#modalReiniciar" data-toggle="modal" id="btnReiniciar">Iniciar nueva partida</button>
     </div>
     <div id="modalReiniciar" class="modal animated zoomIn" role="dialog" data-easein="expandIn">
@@ -60,10 +60,14 @@
         </div>
     </div>
     <script>
-        var cardClicked = false, url1 = "", url2 = "";
+        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0;
 
         $(document).ready(function () {
             $("button.dificultades").click(function () {
+                urls = [];
+                intentos = 0;
+                $("#intentos").html(intentos);
+
                 $.post("getImages.php", { d: $(this).attr("value") }, function (data) {
 
                     var $fila = $("#fila");
@@ -88,36 +92,33 @@
 
                     // flip(): inicializa la librería
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
-                    $("div.carta").flip().on("click",function (e) {
+                    $("div.carta").flip().on("click",function () {
 
-                        cardClicked = true;
+                        var flip = $(this).data("flip-model");
 
-                        url1 = $(this).find("div.back img").attr("src");
+                        if(flip.isFlipped) {
+                            intentos++;
 
-                        //$(this).flip(true, prueba($(this).attr("data-id")));
-                        $(this).flip(true);
-
-                        alert(url1);
-
-                        if(cardClicked) {
-                            $(this).off(e);
-                            $("div.carta").on("click", function (e) {
-                                $(this).off(e);
-                                url2 = $(this).find("div.back img").attr("src");
-                                alert("URL 1: " + url1 + "\n" + "URL 2: " + url2);
-                            })
+                            $("#intentos").html(intentos);
                         }
 
-//                        $("div.carta").on("click", function () {
-//
-//                            url2 = $(this).find("div.back img").attr("src");
-//
-//                            alert("URL 1: " + url1 + "\n" + "URL 2: " + url2);
-//                        });
+                        var url = $(this).find("div.back img").attr("src");
+
+                        $(this).flip(true);
+
+                        if(hayPareja(url))
+                        {
+                            alert("va");
+                        }
+                        else {
+                            alert("NO VA");
+                        }
+
+                        urls.push(url);
                     });
                 });
 
-                checkCards();
+                addMargin();
 
                 $("div.bottom-bar").slideDown();
             });
@@ -137,12 +138,14 @@
             }
         }
 
-        function checkCards() {
+        function addMargin() {
             $("#divCartas").css("margin-bottom", "100px");
         }
 
-        function prueba(id) {
-            alert(id);
+        function hayPareja(url) {
+
+
+            return urls.indexOf(url) != -1;
         }
     </script>
 </body>
