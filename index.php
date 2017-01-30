@@ -60,12 +60,13 @@
         </div>
     </div>
     <script>
-        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0;
+        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, aux = 0;
 
         $(document).ready(function () {
             $("button.dificultades").click(function () {
                 urls = [];
                 intentos = 0;
+                numAciertos = 0;
                 $("#intentos").html(intentos);
 
                 $.post("getImages.php", { d: $(this).attr("value") }, function (data) {
@@ -94,6 +95,8 @@
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
                     $("div.carta").flip().on("click",function () {
 
+                        aux++;
+
                         var flip = $(this).data("flip-model");
 
                         if(flip.isFlipped) {
@@ -106,14 +109,37 @@
 
                         $(this).flip(true);
 
-                        if(hayPareja(url))
-                        {
-                            alert("va");
-                        }
-                        else {
-                            alert("NO VA");
-                        }
+                        $(this).on("flip:done", function () {
+                            if(aux == 2) {
+                                if(hayPareja(url)) {
+                                    alert("va");
+                                    numAciertos++;
+                                    $("#aciertos").html(numAciertos);
+                                    urls = [];
+                                }
+                                else {
+                                    unflip($(this));
+                                    unflip($("img[src='" + urls[0] + "']").closest("div.carta"));
+                                    urls = [];
+                                }
+                                aux = 0;
+                            }
+                        });
 
+//                        if(aux == 2) {
+//                            aux = 0;
+//
+//                            if(hayPareja(url)) {
+//                                alert("va");
+//                                urls = [];
+//                            }
+//                            else {
+//                                alert("NO VA");
+//                                setTimeout(unflip($(this)), 3000);
+//                            }
+//                        }
+
+                        //urls = [];
                         urls.push(url);
                     });
                 });
@@ -143,9 +169,13 @@
         }
 
         function hayPareja(url) {
+            for(var i = 0; i < urls.length; i++) {
+                return urls[i] == url;
+            }
+        }
 
-
-            return urls.indexOf(url) != -1;
+        function unflip(element) {
+            $(element).flip(false);
         }
     </script>
 </body>
