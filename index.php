@@ -32,7 +32,7 @@
     <div class="bottom-bar" style="display: none;">
         <strong id="info">Información de la partida</strong>
         <span>Número de intentos: <span id="intentos" style="margin-left: 0">0</span></span>
-        <span>Número de aciertos: <span id="aciertos" style="margin-left: 0">0</span></span>
+        <span>Nº parejas acertadas: <span id="aciertos" style="margin-left: 0">0</span></span>
         <span>Cartas restantes: <span id="cartasRestantes" style="margin-left: 0">0</span></span>
         <button class="btn btn-danger" data-target="#modalReiniciar" data-toggle="modal" id="btnReiniciar">Iniciar nueva partida</button>
     </div>
@@ -68,6 +68,7 @@
                 intentos = 0;
                 numAciertos = 0;
                 $("#intentos").html(intentos);
+                $("#aciertos").html(numAciertos);
 
                 $.post("getImages.php", { d: $(this).attr("value") }, function (data) {
 
@@ -84,12 +85,14 @@
                     var salida = "";
 
                     for(var i = 0; i < json.imagenes.length; i++) {
-                        salida += "<div class='carta col-sm-3' id='carta" + (i+1) + "' data-id='" + json.imagenes[i].id + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></div>";
+                        salida += "<div class='carta col-sm-3' id='carta" + (i+1) + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></div>";
                     }
 
                     $("#divDificultades").slideUp();
 
                     $fila.html(salida).slideDown("slow");
+
+                    // Cartas restantes
 
                     // flip(): inicializa la librería
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
@@ -100,9 +103,9 @@
                         var flip = $(this).data("flip-model");
 
                         if(flip.isFlipped) {
-                            intentos++;
-
-                            $("#intentos").html(intentos);
+//                            intentos++;
+//
+//                            $("#intentos").html(intentos);
                         }
 
                         var url = $(this).find("div.back img").attr("src");
@@ -112,32 +115,36 @@
                         $(this).on("flip:done", function () {
                             if(aux == 2) {
                                 if(hayPareja(url)) {
-                                    alert("va");
                                     numAciertos++;
                                     $("#aciertos").html(numAciertos);
                                     urls = [];
+
+                                    intentos++;
+
+                                    $("#intentos").html(intentos);
+
+                                    if(hasGanado($("div.carta").length, numAciertos)) {
+                                        $("#h1Partida").html("¡Has ganado!");
+                                        $(".modal-body p").html("¡Enhorabuena!. ¿Quieres jugar una nueva partida?");
+                                        $("#modalReiniciar").modal("show");
+                                    }
                                 }
                                 else {
                                     unflip($(this));
                                     unflip($("img[src='" + urls[0] + "']").closest("div.carta"));
                                     urls = [];
+
+                                    intentos++;
+
+                                    $("#intentos").html(intentos);
                                 }
                                 aux = 0;
                             }
-                        });
 
-//                        if(aux == 2) {
-//                            aux = 0;
-//
-//                            if(hayPareja(url)) {
-//                                alert("va");
-//                                urls = [];
+//                            if(hasGanado($("div.carta").length, numAciertos)) {
+//                                alert("Has ganao");
 //                            }
-//                            else {
-//                                alert("NO VA");
-//                                setTimeout(unflip($(this)), 3000);
-//                            }
-//                        }
+                        });
 
                         //urls = [];
                         urls.push(url);
@@ -152,6 +159,11 @@
             $(".modal-body button.dificultades").click(function () {
                 $("#modalReiniciar").modal("toggle");
             });
+
+            $("#btnReiniciar").click(function () {
+                $("#h1Partida").html("Iniciar nueva partida");
+                $(".modal-body p").html("Elige la dificultad. <strong>NOTA</strong>: Se perderá todo el progreso realizado.");
+            })
         });
 
         function desordena(array) {
@@ -176,6 +188,12 @@
 
         function unflip(element) {
             $(element).flip(false);
+        }
+        
+        function hasGanado(numCartas, numAciertos) {
+            if(numCartas != 0 && numAciertos != 0) {
+                return (numAciertos * 2) == numCartas;
+            }
         }
     </script>
 </body>
