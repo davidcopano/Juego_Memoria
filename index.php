@@ -102,12 +102,6 @@
 
                         var flip = $(this).data("flip-model");
 
-                        if(flip.isFlipped) {
-//                            intentos++;
-//
-//                            $("#intentos").html(intentos);
-                        }
-
                         var url = $(this).find("div.back img").attr("src");
 
                         $(this).flip(true);
@@ -140,10 +134,6 @@
                                 }
                                 aux = 0;
                             }
-
-//                            if(hasGanado($("div.carta").length, numAciertos)) {
-//                                alert("Has ganao");
-//                            }
                         });
 
                         //urls = [];
@@ -187,7 +177,10 @@
         }
 
         function unflip(element) {
-            $(element).flip(false);
+            //$(element).flip(false);
+            setTimeout(function () {
+                $(element).flip(false);
+            }, 300);
         }
         
         function hasGanado(numCartas, numAciertos) {
