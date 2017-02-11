@@ -9,6 +9,17 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/animate.css">
+    <style>
+        #blockcards {
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color: rgba(255, 255, 255, 0);
+            z-index:900;
+        }
+    </style>
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/jquery.flip.min.js"></script>
@@ -16,6 +27,7 @@
 </head>
 <body>
     <div class="container">
+        <div id="blockcards" style="display: none;"></div>
         <h1>Juego de Parejas</h1>
         <div class="row" id="divDificultades">
             <h2>Elige el modo de dificultad:</h2>
@@ -60,7 +72,7 @@
         </div>
     </div>
     <script>
-        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, aux = 0;
+        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, cartasLevantadas = 0, deshabilitado = false;
 
         $(document).ready(function () {
             $("button.dificultades").click(function () {
@@ -98,20 +110,28 @@
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
                     $("div.carta").flip().on("click",function () {
 
-                        aux++;
-
-                        var flip = $(this).data("flip-model");
+                        cartasLevantadas++;
 
                         var url = $(this).find("div.back img").attr("src");
 
                         $(this).flip(true);
 
+                        if(cartasLevantadas == 2) {
+                            $("#blockcards").show();
+                        }
+
                         $(this).on("flip:done", function () {
-                            if(aux == 2) {
+                            if(cartasLevantadas == 2) {
+
+                                //$("#blockcards").show();
+                                console.log("deshabilitado");
+
                                 if(hayPareja(url)) {
+                                    console.log("URL[0]: " + urls[0] + "\n" + "URL[1]: " + urls[1] + "\n" + "cartasLevantadas: " + cartasLevantadas);
+                                    urls = [];
                                     numAciertos++;
                                     $("#aciertos").html(numAciertos);
-                                    urls = [];
+                                    //urls = [];
 
                                     intentos++;
 
@@ -132,7 +152,11 @@
 
                                     $("#intentos").html(intentos);
                                 }
-                                aux = 0;
+                                cartasLevantadas = 0;
+                                setTimeout(function () {
+                                    $("#blockcards").hide();
+                                    console.log("habilitado");
+                                }, 300);
                             }
                         });
 
@@ -171,8 +195,20 @@
         }
 
         function hayPareja(url) {
+
+            var sonParejas = false;
+
             for(var i = 0; i < urls.length; i++) {
-                return urls[i] == url;
+                //return urls[i] == url;
+                if(urls[i] == url) {
+                    sonParejas = true;
+                    return sonParejas;
+                }
+                else {
+                    sonParejas = false;
+                }
+
+                return sonParejas;
             }
         }
 
@@ -180,7 +216,7 @@
             //$(element).flip(false);
             setTimeout(function () {
                 $(element).flip(false);
-            }, 300);
+            }, 100);
         }
         
         function hasGanado(numCartas, numAciertos) {
