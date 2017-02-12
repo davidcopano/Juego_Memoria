@@ -110,15 +110,15 @@
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
                     $("div.carta").flip().on("click",function () {
 
+                        $("#blockcards").show();
+
                         cartasLevantadas++;
 
                         var url = $(this).find("div.back img").attr("src");
 
-                        $(this).flip(true);
+                        urls.push(url);
 
-                        if(cartasLevantadas == 2) {
-                            $("#blockcards").show();
-                        }
+                        $(this).flip(true);
 
                         $(this).on("flip:done", function () {
                             if(cartasLevantadas == 2) {
@@ -153,15 +153,17 @@
                                     $("#intentos").html(intentos);
                                 }
                                 cartasLevantadas = 0;
-                                setTimeout(function () {
-                                    $("#blockcards").hide();
-                                    console.log("habilitado");
-                                }, 300);
                             }
                         });
 
                         //urls = [];
-                        urls.push(url);
+                        //urls.push(url);
+
+                        // ---------- Intenta petar el juego con esto :) -----------
+
+                        setTimeout(function () {
+                            $("#blockcards").hide();
+                        }, 1000);
                     });
                 });
 
@@ -195,30 +197,15 @@
         }
 
         function hayPareja(url) {
-
+            console.log(urls[0] === url);
             return urls[0] === url;
-
-//            var sonParejas = false;
-//
-//            for(var i = 0; i < urls.length; i++) {
-//                //return urls[i] == url;
-//                if(urls[i] == url) {
-//                    sonParejas = true;
-//                    i = urls.length;
-//                }
-//                else {
-//                    sonParejas = false;
-//                }
-//            }
-//
-//            return sonParejas;
         }
 
         function unflip(element) {
             //$(element).flip(false);
             setTimeout(function () {
                 $(element).flip(false);
-            }, 100);
+            }, 250);
         }
         
         function hasGanado(numCartas, numAciertos) {
