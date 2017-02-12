@@ -196,20 +196,22 @@
 
         function hayPareja(url) {
 
-            var sonParejas = false;
+            return urls[0] === url;
 
-            for(var i = 0; i < urls.length; i++) {
-                //return urls[i] == url;
-                if(urls[i] == url) {
-                    sonParejas = true;
-                    return sonParejas;
-                }
-                else {
-                    sonParejas = false;
-                }
-
-                return sonParejas;
-            }
+//            var sonParejas = false;
+//
+//            for(var i = 0; i < urls.length; i++) {
+//                //return urls[i] == url;
+//                if(urls[i] == url) {
+//                    sonParejas = true;
+//                    i = urls.length;
+//                }
+//                else {
+//                    sonParejas = false;
+//                }
+//            }
+//
+//            return sonParejas;
         }
 
         function unflip(element) {
