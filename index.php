@@ -142,7 +142,7 @@
                                 carta1.disabled = false;
                                 $(carta1).css("cursor", "pointer");
                                 console.log("carta con id = " + carta1.id + " habilitada");
-                            }, 6000);
+                            }, 16000);
 
                             ids.remove($(this).attr("id"));
                         }
@@ -228,12 +228,13 @@
 
             for(var i = 0; i < botones.length; i++) {
                 botones[i].disabled = false;
+                botones[i].style.cursor = "pointer";
             }
+        }
 
-//            $("button.carta").each(function () {
-//                $(this).disabled = false;
-//                //console.log("carta con id = " + $(this).attr("id") + " habilitada");
-//            })
+        function deshabilitaBtns(boton1, boton2) {
+            boton1.disabled = true;
+            boton2.disabled = true;
         }
 
         function compruebaBtn(boton) {
