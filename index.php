@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/animate.css">
     <style>
-        #blockcards, .bloquear {
+        #blockcards {
             position:absolute;
             top:0;
             left:0;
@@ -18,6 +18,14 @@
             height:100%;
             background-color: rgba(255, 255, 255, 0);
             z-index:900;
+        }
+
+        div[class^="bloquearCarta"] {
+            z-index: 9999;
+            width: 205px;
+            height: 110px;
+            display: none;
+            background-color: rgba(255, 255, 255, 0);
         }
     </style>
     <script src="js/jquery-3.1.1.min.js"></script>
@@ -72,7 +80,18 @@
         </div>
     </div>
     <script>
-        var urls = [], ids = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, cartasLevantadas = 0;
+        Array.prototype.remove = function() {
+            var what, a = arguments, L = a.length, ax;
+            while (L && this.length) {
+                what = a[--L];
+                while ((ax = this.indexOf(what)) !== -1) {
+                    this.splice(ax, 1);
+                }
+            }
+            return this;
+        };
+
+        var urls = [], ids = [], intentos = 0, numAciertos = 0, cartasLevantadas = 0;
 
         $(document).ready(function () {
             $("button.dificultades").click(function () {
@@ -97,7 +116,7 @@
                     var salida = "";
 
                     for(var i = 0; i < json.imagenes.length; i++) {
-                        salida += "<div class='carta col-sm-3' id='carta" + (i+1) + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></div>";
+                        salida += "<button class='carta col-sm-3' id='carta" + (i+1) + "'><div class='front'><img src='images/pregunta.png' width='93' height='93'></div><div class='back'><img src='" + json.imagenes[i].url + "' alt='Imagen' width='93' height='93'></div></button>";
                     }
 
                     $("#divDificultades").slideUp();
@@ -108,12 +127,24 @@
 
                     // flip(): inicializa la librería
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
-                    $("div.carta").flip().on("click",function () {
+                    $("button.carta").flip().on("click",function () {
+                        var carta1 = this;
+                        ids.push($(this).attr("id"));
+                        // Si no encuentro el id de la carta pulsada...
+                        if($.inArray($(this).attr("id"), ids) !== -1) {
+                            setTimeout(function () {
+                                carta1.disabled = true;
+                                $(carta1).css("cursor", "not-allowed");
+                                console.log("carta con id = " + carta1.id + " deshabilitada");
+                            }, 50);
 
-                        if($.inArray($(this).attr("id"), ids) === -1) {
-                            alert("empujo esta mierda");
-                            // $(this).outerWidth();
-                            ids.push($(this).attr("id"));
+                            setTimeout(function () {
+                                carta1.disabled = false;
+                                $(carta1).css("cursor", "pointer");
+                                console.log("carta con id = " + carta1.id + " habilitada");
+                            }, 6000);
+
+                            ids.remove($(this).attr("id"));
                         }
 
                         $("#blockcards").show();
@@ -151,12 +182,14 @@
                                 }
                                 else {
                                     unflip($(this));
-                                    unflip($("img[src='" + urls[0] + "']").closest("div.carta"));
+                                    unflip($("img[src='" + urls[0] + "']").closest("button.carta"));
                                     urls = [];
 
                                     intentos++;
 
                                     $("#intentos").html(intentos);
+
+                                    habilitaBotones();
                                 }
                                 cartasLevantadas = 0;
                             }
@@ -169,6 +202,7 @@
 
                         setTimeout(function () {
                             $("#blockcards").hide();
+                            //habilitaBotones();
                         }, 1000);
                     });
                 });
@@ -187,6 +221,26 @@
                 $(".modal-body p").html("Elige la dificultad. <strong>NOTA</strong>: Se perderá todo el progreso realizado.");
             })
         });
+
+        function habilitaBotones() {
+
+            var botones = document.querySelectorAll("button.carta");
+
+            for(var i = 0; i < botones.length; i++) {
+                botones[i].disabled = false;
+            }
+
+//            $("button.carta").each(function () {
+//                $(this).disabled = false;
+//                //console.log("carta con id = " + $(this).attr("id") + " habilitada");
+//            })
+        }
+
+        function compruebaBtn(boton) {
+            if(boton.disabled == false) {
+                $(boton).css("cursor", "pointer");
+            }
+        }
 
         function desordena(array) {
             var i, pos, temp;

@@ -34,20 +34,29 @@ h2 {
 	border-radius: 5px;
 }
 
-#divCartas .carta {
+#divCartas button.carta {
 	padding-top: 5px;
 	margin-top: 15px;
 	margin-bottom: 15px;
     /*background: linear-gradient(#ef7573, #efe684);*/
     border-radius: 5px;
-	padding-left: 50px;
+	padding-left: 5px;
+    padding-right: 0 !important;
+	background-color: white;
     height: 110px;
+    border: 0;
+    outline: none;
+}
+
+div.front img {
+    padding-right: 5px;
 }
 
 .carta:hover {
 	transition: 0.25s;
-	box-shadow: 0 0 20px black;
-	border-radius: 10px;
+	/*box-shadow: 0 0 20px black;*/
+    border: 1px solid gray !important;
+	border-radius: 25px;
 	cursor: pointer;
 }
 
