@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/animate.css">
     <style>
-        #blockcards {
+        #blockcards, .bloquear {
             position:absolute;
             top:0;
             left:0;
@@ -72,7 +72,7 @@
         </div>
     </div>
     <script>
-        var urls = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, cartasLevantadas = 0, deshabilitado = false;
+        var urls = [], ids = [], intentos = 0, numAciertos = 0, cartasRestantes = 0, cartasLevantadas = 0;
 
         $(document).ready(function () {
             $("button.dificultades").click(function () {
@@ -109,6 +109,12 @@
                     // flip(): inicializa la librería
                     // Al hacer click, muestra la parte trasera de la carta y deshabilita el hacer click para mostrar la parte delantera.
                     $("div.carta").flip().on("click",function () {
+
+                        if($.inArray($(this).attr("id"), ids) === -1) {
+                            alert("empujo esta mierda");
+                            // $(this).outerWidth();
+                            ids.push($(this).attr("id"));
+                        }
 
                         $("#blockcards").show();
 
